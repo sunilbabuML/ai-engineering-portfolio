@@ -7,3 +7,8 @@ httpx>=0.27,<1
 # RAG and semantic search
 numpy==2.5.4
 sentence-transformers==6.2.0
+
+# Day 3 - LLM providers and configuration
+ollama==0.6.3
+openai==3.46.0
+python-dotenv==1.2.4

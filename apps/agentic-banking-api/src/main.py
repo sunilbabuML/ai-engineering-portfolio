@@ -6,6 +6,8 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
 from src.rag.retriever import BankingPolicyRetriever
+from src.rag.rag_service import BankingRAGService
+from src.llm.factory import get_llm_provider
 
 
 ROOT = Path(__file__).resolve().parents[3]
@@ -19,6 +21,11 @@ retriever = BankingPolicyRetriever(KNOWLEDGE_BASE)
 async def lifespan(app: FastAPI):
     # Initialize once when the API starts.
     retriever.initialize()
+    app.state.rag_service = BankingRAGService(
+        retriever=retriever,
+        llm_provider=get_llm_provider(),
+        min_similarity=0.60,
+    )
     yield
 
 
@@ -54,32 +61,7 @@ def ask(body: Question):
             detail="Question cannot be empty",
         )
 
-    results = retriever.retrieve(
+    return app.state.rag_service.answer(
         body.question,
         top_k=3,
     )
-
-    if not results:
-        raise HTTPException(
-            status_code=404,
-            detail="No relevant policies found",
-        )
-
-    top_result = results[0]
-
-    citations = [
-        {
-            "document_id": result["metadata"]["document_id"],
-            "source": result["source"],
-            "chunk_id": result["chunk_id"],
-            "similarity": round(result["score"], 4),
-        }
-        for result in results
-    ]
-
-    return {
-        "question": body.question,
-        "answer": top_result["content"],
-        "mode": "rag_retrieval",
-        "citations": citations,
-    }
