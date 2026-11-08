@@ -2,6 +2,8 @@
 
 from ollama import Client
 
+from src.audit.audit_logger import AgentAuditLogger
+
 from src.tools.tool_registry import (
     BankingToolRegistry,
     TOOL_DEFINITIONS,
@@ -16,7 +18,9 @@ class BankingAgent:
         authorized_customer_id: str,
         model: str = "qwen2.5:3b",
         host: str = "http://localhost:11434",
+        audit_logger: AgentAuditLogger | None = None,
     ):
+        self.audit_logger = audit_logger or AgentAuditLogger()
         self.model = model
         self.client = Client(host=host, timeout=120.0)
         self.registry = BankingToolRegistry(authorized_customer_id)
@@ -71,6 +75,11 @@ class BankingAgent:
         tool_result = self.registry.execute(
             tool_name=tool_name,
             arguments=arguments,
+        )
+
+        self.audit_logger.log_tool_execution(
+            tool_name=tool_name,
+            status=tool_result.get("status", "error"),
         )
 
         # Never send unauthorized account data to the model.

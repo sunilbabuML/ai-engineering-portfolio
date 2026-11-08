@@ -32,3 +32,6 @@ Thumbs.db
 dist/
 build/
 *.egg-info/
+
+# Runtime audit logs (do not commit)
+logs/
