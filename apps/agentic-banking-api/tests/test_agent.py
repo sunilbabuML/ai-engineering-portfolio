@@ -154,3 +154,105 @@ def test_empty_question_rejected(account):
 
     with pytest.raises(ValueError):
         agent.run("   ")
+
+
+@pytest.mark.parametrize(
+    "exception_type",
+    [ConnectionError, TimeoutError],
+)
+def test_initial_ollama_failure_returns_safe_error(
+    exception_type,
+):
+    import json
+    from unittest.mock import Mock
+
+    agent = BankingAgent(
+        authorized_customer_id="TEST-CUSTOMER"
+    )
+
+    agent.client.chat = Mock(
+        side_effect=exception_type(
+            "INTERNAL-SECRET: Ollama service failure"
+        )
+    )
+
+    result = agent.run(
+        "What is my account balance?"
+    )
+
+    assert result["mode"] == "agent_error"
+    assert result["tool_used"] is None
+
+    assert result["answer"] == (
+        "The banking assistant is temporarily unavailable. "
+        "Please try again later."
+    )
+
+    assert "INTERNAL-SECRET" not in json.dumps(result)
+    assert agent.client.chat.call_count == 1
+
+
+@pytest.mark.parametrize(
+    "exception_type",
+    [ConnectionError, TimeoutError],
+)
+def test_final_ollama_failure_returns_safe_error(
+    exception_type,
+):
+    import json
+    from unittest.mock import Mock
+
+    agent = BankingAgent(
+        authorized_customer_id="TEST-CUSTOMER"
+    )
+
+    tool_call = Mock()
+    tool_call.function.name = "get_account_details"
+    tool_call.function.arguments = {
+        "account_id": "DEMO-1001"
+    }
+
+    first_response = Mock()
+    first_response.message.tool_calls = [tool_call]
+    first_response.message.model_dump.return_value = {
+        "role": "assistant",
+        "content": "",
+    }
+
+    agent.client.chat = Mock(
+        side_effect=[
+            first_response,
+            exception_type(
+                "INTERNAL-SECRET: Ollama service failure"
+            ),
+        ]
+    )
+
+    agent.registry.execute = Mock(
+        return_value={
+            "status": "success",
+            "account": {
+                "balance_usd": 999999.99,
+            },
+        }
+    )
+
+    result = agent.run(
+        "What is my account balance?"
+    )
+
+    assert result["mode"] == "agent_error"
+    assert result["tool_used"] == "get_account_details"
+
+    assert result["answer"] == (
+        "The banking assistant is temporarily unavailable. "
+        "Please try again later."
+    )
+
+    raw_response = json.dumps(result)
+
+    assert "INTERNAL-SECRET" not in raw_response
+    assert "999999.99" not in raw_response
+
+    assert agent.client.chat.call_count == 2
+    assert agent.registry.execute.call_count == 1

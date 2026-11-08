@@ -43,12 +43,23 @@ class BankingAgent:
             {"role": "user", "content": question},
         ]
 
-        response = self.client.chat(
-            model=self.model,
-            messages=messages,
-            tools=TOOL_DEFINITIONS,
-            options={"temperature": 0},
-        )
+        try:
+            response = self.client.chat(
+                model=self.model,
+                messages=messages,
+                tools=TOOL_DEFINITIONS,
+                options={"temperature": 0},
+            )
+        except (ConnectionError, TimeoutError, OSError):
+            return {
+                "question": question,
+                "mode": "agent_error",
+                "tool_used": None,
+                "answer": (
+                    "The banking assistant is temporarily unavailable. "
+                    "Please try again later."
+                ),
+            }
 
         tool_calls = response.message.tool_calls or []
 
@@ -111,11 +122,22 @@ class BankingAgent:
             }
         )
 
-        final_response = self.client.chat(
-            model=self.model,
-            messages=messages,
-            options={"temperature": 0},
-        )
+        try:
+            final_response = self.client.chat(
+                model=self.model,
+                messages=messages,
+                options={"temperature": 0},
+            )
+        except (ConnectionError, TimeoutError, OSError):
+            return {
+                "question": question,
+                "mode": "agent_error",
+                "tool_used": tool_name,
+                "answer": (
+                    "The banking assistant is temporarily unavailable. "
+                    "Please try again later."
+                ),
+            }
 
         return {
             "question": question,
