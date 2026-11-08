@@ -1,4 +1,5 @@
-﻿import json
+from ollama import ResponseError, RequestError
+import json
 
 from ollama import Client
 
@@ -50,7 +51,7 @@ class BankingAgent:
                 tools=TOOL_DEFINITIONS,
                 options={"temperature": 0},
             )
-        except (ConnectionError, TimeoutError, OSError):
+        except (ConnectionError, TimeoutError, OSError, ResponseError, RequestError):
             return {
                 "question": question,
                 "mode": "agent_error",
@@ -128,7 +129,7 @@ class BankingAgent:
                 messages=messages,
                 options={"temperature": 0},
             )
-        except (ConnectionError, TimeoutError, OSError):
+        except (ConnectionError, TimeoutError, OSError, ResponseError, RequestError):
             return {
                 "question": question,
                 "mode": "agent_error",
