@@ -82,7 +82,10 @@ class BankingToolRegistry:
                     "message": "Invalid tool arguments",
                 }
 
-            if not isinstance(arguments["account_id"], str):
+            if (
+                not isinstance(arguments["account_id"], str)
+                or not arguments["account_id"].strip()
+            ):
                 return {
                     "status": "error",
                     "message": "Invalid account ID",
@@ -106,7 +109,10 @@ class BankingToolRegistry:
                     "message": "Invalid tool arguments",
                 }
 
-            if not isinstance(arguments["account_id"], str):
+            if (
+                not isinstance(arguments["account_id"], str)
+                or not arguments["account_id"].strip()
+            ):
                 return {
                     "status": "error",
                     "message": "Invalid account ID",

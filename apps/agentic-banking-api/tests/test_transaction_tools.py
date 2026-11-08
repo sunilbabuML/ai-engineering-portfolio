@@ -88,3 +88,28 @@ def test_registry_rejects_unknown_tool(account):
     )
 
     assert result["status"] == "error"
+
+
+@pytest.mark.parametrize(
+    "tool_name",
+    ["get_account_details", "get_transaction_history"],
+)
+@pytest.mark.parametrize(
+    "account_id",
+    ["", "   ", None, 123],
+)
+def test_registry_rejects_invalid_account_ids(
+    tool_name,
+    account_id,
+):
+    registry = BankingToolRegistry("TEST-CUSTOMER")
+
+    result = registry.execute(
+        tool_name=tool_name,
+        arguments={"account_id": account_id},
+    )
+
+    assert result == {
+        "status": "error",
+        "message": "Invalid account ID",
+    }
