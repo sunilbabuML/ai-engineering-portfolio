@@ -1,0 +1,164 @@
+[
+  {
+    "transaction_id": "TXN-01-001",
+    "account_id": "DEMO-1001",
+    "transaction_date": "2026-10-25",
+    "description": "Payroll Deposit",
+    "transaction_type": "credit",
+    "amount_usd": 2500.0,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-01-002",
+    "account_id": "DEMO-1001",
+    "transaction_date": "2026-10-24",
+    "description": "Grocery Store",
+    "transaction_type": "debit",
+    "amount_usd": -86.45,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-01-003",
+    "account_id": "DEMO-1001",
+    "transaction_date": "2026-10-23",
+    "description": "Electricity Bill",
+    "transaction_type": "debit",
+    "amount_usd": -124.3,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-01-004",
+    "account_id": "DEMO-1001",
+    "transaction_date": "2026-10-22",
+    "description": "Online Purchase",
+    "transaction_type": "debit",
+    "amount_usd": -59.99,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-01-005",
+    "account_id": "DEMO-1001",
+    "transaction_date": "2026-10-21",
+    "description": "Restaurant Payment",
+    "transaction_type": "debit",
+    "amount_usd": -42.75,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-01-006",
+    "account_id": "DEMO-1001",
+    "transaction_date": "2026-10-20",
+    "description": "ATM Withdrawal",
+    "transaction_type": "debit",
+    "amount_usd": -100.0,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-02-001",
+    "account_id": "DEMO-1002",
+    "transaction_date": "2026-10-24",
+    "description": "Payroll Deposit",
+    "transaction_type": "credit",
+    "amount_usd": 2500.0,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-02-002",
+    "account_id": "DEMO-1002",
+    "transaction_date": "2026-10-23",
+    "description": "Grocery Store",
+    "transaction_type": "debit",
+    "amount_usd": -86.45,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-02-003",
+    "account_id": "DEMO-1002",
+    "transaction_date": "2026-10-22",
+    "description": "Electricity Bill",
+    "transaction_type": "debit",
+    "amount_usd": -124.3,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-02-004",
+    "account_id": "DEMO-1002",
+    "transaction_date": "2026-10-21",
+    "description": "Online Purchase",
+    "transaction_type": "debit",
+    "amount_usd": -59.99,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-02-005",
+    "account_id": "DEMO-1002",
+    "transaction_date": "2026-10-20",
+    "description": "Restaurant Payment",
+    "transaction_type": "debit",
+    "amount_usd": -42.75,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-02-006",
+    "account_id": "DEMO-1002",
+    "transaction_date": "2026-10-19",
+    "description": "ATM Withdrawal",
+    "transaction_type": "debit",
+    "amount_usd": -100.0,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-03-001",
+    "account_id": "DEMO-1003",
+    "transaction_date": "2026-10-23",
+    "description": "Payroll Deposit",
+    "transaction_type": "credit",
+    "amount_usd": 2500.0,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-03-002",
+    "account_id": "DEMO-1003",
+    "transaction_date": "2026-10-22",
+    "description": "Grocery Store",
+    "transaction_type": "debit",
+    "amount_usd": -86.45,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-03-003",
+    "account_id": "DEMO-1003",
+    "transaction_date": "2026-10-21",
+    "description": "Electricity Bill",
+    "transaction_type": "debit",
+    "amount_usd": -124.3,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-03-004",
+    "account_id": "DEMO-1003",
+    "transaction_date": "2026-10-20",
+    "description": "Online Purchase",
+    "transaction_type": "debit",
+    "amount_usd": -59.99,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-03-005",
+    "account_id": "DEMO-1003",
+    "transaction_date": "2026-10-19",
+    "description": "Restaurant Payment",
+    "transaction_type": "debit",
+    "amount_usd": -42.75,
+    "currency": "USD"
+  },
+  {
+    "transaction_id": "TXN-03-006",
+    "account_id": "DEMO-1003",
+    "transaction_date": "2026-10-18",
+    "description": "ATM Withdrawal",
+    "transaction_type": "debit",
+    "amount_usd": -100.0,
+    "currency": "USD"
+  }
+]
