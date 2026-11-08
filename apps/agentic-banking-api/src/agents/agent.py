@@ -72,10 +72,16 @@ class BankingAgent:
         tool_name = tool_call.function.name
         arguments = tool_call.function.arguments
 
-        tool_result = self.registry.execute(
-            tool_name=tool_name,
-            arguments=arguments,
-        )
+        try:
+            tool_result = self.registry.execute(
+                tool_name=tool_name,
+                arguments=arguments,
+            )
+        except Exception:
+            tool_result = {
+                "status": "error",
+                "message": "Unable to complete the banking request.",
+            }
 
         self.audit_logger.log_tool_execution(
             tool_name=tool_name,
