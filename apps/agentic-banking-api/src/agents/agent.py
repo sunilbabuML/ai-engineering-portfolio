@@ -95,10 +95,21 @@ class BankingAgent:
                 "message": "Unable to complete the banking request.",
             }
 
-        self.audit_logger.log_tool_execution(
-            tool_name=tool_name,
-            status=tool_result.get("status", "error"),
-        )
+        try:
+            self.audit_logger.log_tool_execution(
+                tool_name=tool_name,
+                status=tool_result.get("status", "error"),
+            )
+        except Exception:
+            return {
+                "question": question,
+                "mode": "agent_error",
+                "tool_used": tool_name,
+                "answer": (
+                    "The banking assistant is temporarily unavailable. "
+                    "Please try again later."
+                ),
+            }
 
         # Never send unauthorized account data to the model.
         if tool_result.get("status") != "success":

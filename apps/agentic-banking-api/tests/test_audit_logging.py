@@ -1,4 +1,4 @@
-﻿import json
+import json
 from types import SimpleNamespace
 
 import pytest
@@ -187,3 +187,72 @@ def test_agent_handles_unexpected_tool_exception(
 
     finally:
         audit_logger.close()
+
+
+@pytest.mark.parametrize(
+    "tool_name",
+    ["get_account_details", "get_transaction_history"],
+)
+def test_agent_fails_closed_when_audit_logging_fails(
+    monkeypatch,
+    tool_name,
+):
+    import json
+    from unittest.mock import Mock
+
+    agent = BankingAgent(
+        authorized_customer_id="TEST-CUSTOMER"
+    )
+
+    tool_call = Mock()
+    tool_call.function.name = tool_name
+    tool_call.function.arguments = {
+        "account_id": "DEMO-1001"
+    }
+
+    first_response = Mock()
+    first_response.message.tool_calls = [tool_call]
+    first_response.message.model_dump.return_value = {
+        "role": "assistant",
+        "content": "",
+    }
+
+    agent.client.chat = Mock(
+        return_value=first_response
+    )
+
+    agent.registry.execute = Mock(
+        return_value={
+            "status": "success",
+            "account": {
+                "balance_usd": 999999.99
+            },
+        }
+    )
+
+    agent.audit_logger.log_tool_execution = Mock(
+        side_effect=OSError(
+            "INTERNAL-SECRET: Audit storage unavailable"
+        )
+    )
+
+    result = agent.run(
+        "What is my account balance?"
+    )
+
+    assert result["mode"] == "agent_error"
+    assert result["tool_used"] == tool_name
+
+    assert result["answer"] == (
+        "The banking assistant is temporarily unavailable. "
+        "Please try again later."
+    )
+
+    raw_response = json.dumps(result)
+
+    assert "INTERNAL-SECRET" not in raw_response
+    assert "999999.99" not in raw_response
+
+    assert agent.registry.execute.call_count == 1
+    assert agent.client.chat.call_count == 1
+    assert agent.audit_logger.log_tool_execution.call_count == 1
